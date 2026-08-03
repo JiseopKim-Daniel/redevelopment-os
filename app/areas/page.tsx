@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
-import { PublicAreaCard, type PublicArea } from "@/components/public-area-card";
+import { PublicAreaCard } from "@/components/public-area-card";
+import type { PublicArea } from "@/lib/areas";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = { title: "구역 탐색" };

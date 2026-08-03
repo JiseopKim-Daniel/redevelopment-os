@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { getLifecycleLabel, type PublicArea } from "@/lib/areas";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = { title: "구역 정보" };
@@ -9,26 +10,7 @@ export const dynamic = "force-dynamic";
 
 type AreaDetailPageProps = { params: Promise<{ slug: string }> };
 
-type AreaDetail = {
-  id: string;
-  slug: string;
-  canonical_name: string;
-  representative_address: string | null;
-  project_type: string | null;
-  lifecycle_status: string;
-  current_stage: string | null;
-};
-
-const lifecycleLabels: Record<string, string> = {
-  active: "추적 중",
-  cancelled: "취소",
-  merged: "병합",
-  released: "해제",
-  superseded: "대체됨",
-  suspended: "중단·보류",
-};
-
-async function getAreaBySlug(slug: string): Promise<AreaDetail | null> {
+async function getAreaBySlug(slug: string): Promise<PublicArea | null> {
   const supabase = createClient();
   const { data, error } = await supabase
     .from("areas")
@@ -70,7 +52,7 @@ export default async function AreaDetailPage({ params }: AreaDetailPageProps) {
           <div className="w-fit rounded-2xl bg-emerald-400 px-5 py-3 text-emerald-950">
             <p className="text-xs font-semibold">구역 상태</p>
             <p className="mt-1 text-lg font-bold">
-              {lifecycleLabels[area.lifecycle_status] ?? area.lifecycle_status}
+              {getLifecycleLabel(area.lifecycle_status)}
             </p>
           </div>
         </div>
@@ -90,7 +72,7 @@ export default async function AreaDetailPage({ params }: AreaDetailPageProps) {
           <div>
             <dt className="text-sm text-slate-500">구역 상태</dt>
             <dd className="mt-1 font-semibold">
-              {lifecycleLabels[area.lifecycle_status] ?? area.lifecycle_status}
+              {getLifecycleLabel(area.lifecycle_status)}
             </dd>
           </div>
           <div>

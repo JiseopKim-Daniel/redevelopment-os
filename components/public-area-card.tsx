@@ -1,23 +1,6 @@
 import Link from "next/link";
 
-export type PublicArea = {
-  id: string;
-  slug: string;
-  canonical_name: string;
-  representative_address: string | null;
-  project_type: string | null;
-  lifecycle_status: string;
-  current_stage: string | null;
-};
-
-const lifecycleLabels: Record<string, string> = {
-  active: "추적 중",
-  cancelled: "취소",
-  merged: "병합",
-  released: "해제",
-  superseded: "대체됨",
-  suspended: "중단·보류",
-};
+import { getLifecycleLabel, type PublicArea } from "@/lib/areas";
 
 export function PublicAreaCard({ area }: { area: PublicArea }) {
   return (
@@ -43,7 +26,7 @@ export function PublicAreaCard({ area }: { area: PublicArea }) {
         <div className="rounded-lg bg-slate-50 p-3">
           <dt className="text-slate-500">구역 상태</dt>
           <dd className="mt-1 font-semibold text-slate-900">
-            {lifecycleLabels[area.lifecycle_status] ?? area.lifecycle_status}
+            {getLifecycleLabel(area.lifecycle_status)}
           </dd>
         </div>
       </dl>
